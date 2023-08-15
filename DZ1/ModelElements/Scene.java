@@ -14,10 +14,14 @@ public class Scene {
         if (model.size() > 0) {
             Models = model;
         } else {
-            throw new Exception("Должна передаваться как минимум одна модель");
+            throw new Exception("Должна передаваться как минимум одна Models");
         }
         Flashes = flashes;
-        Cameras = cameras;
+        if (model.size() > 0) {
+            Cameras = cameras;
+        } else {
+            throw new Exception("Должна передаваться как минимум одна Cameras");
+        }
 
     }
 
