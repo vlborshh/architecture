@@ -11,12 +11,15 @@ public class Scene {
     public Scene(int id, List<PoligonalModel> model, List<Flash> flashes, List<Camera> cameras) throws Exception {
 
         Id = id;
+
         if (model.size() > 0) {
             Models = model;
         } else {
             throw new Exception("Должна передаваться как минимум одна Models");
         }
+
         Flashes = flashes;
+
         if (model.size() > 0) {
             Cameras = cameras;
         } else {

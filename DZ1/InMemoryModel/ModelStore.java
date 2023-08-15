@@ -8,31 +8,35 @@ import DZ1.ModelElements.Flash;
 import DZ1.ModelElements.PoligonalModel;
 import DZ1.ModelElements.Scene;
 
-public class ModelStore {
+public class ModelStore implements IModelChanger {
     public List<PoligonalModel> Models;
     public List<Scene> Scenes;
     public List<Flash> Flashes;
     public List<Camera> Cameras;
-    private List<IModelChangedObserver> changeObserver;
+    private List<IModelChangedObserver> changerObserver;
 
-    public ModelStore(IModelChangedObserver changeObserver) {
+    public ModelStore(IModelChangedObserver changerObserver) throws Exception {
 
         this.Models = new ArrayList<>();
         this.Scenes = new ArrayList<>();
         this.Flashes = new ArrayList<>();
         this.Cameras = new ArrayList<>();
 
-        this.changeObserver = changeObserver;
+        this.changerObserver = changerObserver;
 
         Models.add(new PoligonalModel(null));
-        Scenes.add(new Scene());
+
         Flashes.add(new Flash());
         Cameras.add(new Camera());
-
+        Scenes.add(new Scene(0, Models, Flashes, Cameras));
     }
 
-    public Scene GetScene(int i_scene) {
-        return Scenes.get(i_scene);
+    public Scene getScenes(int id) {
+        for (int i = 0; i < Scenes.size(); i++) {
+            if (Scenes.get(i).Id == id) {
+                return Scenes.get(i);
+            }
+        }
     }
 
     @Override
