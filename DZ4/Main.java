@@ -10,7 +10,7 @@ public class Main {
         Customer customer = new Customer(1);
         Ticket ticket = new Ticket(1, 2598.70, -1, LocalDate.now());
         System.out
-                .println("Покупатель с ID: " + customer.getId() + " купил билет с номером: " + ticket.getRootNumber()
+                .println("Покупатель с ID: " + customer.getId() + " купил билет под номером: " + ticket.getRootNumber()
                         + " по цене: " + ticket.getPrice() + " от: " + ticket.getDate());
     }
 }
