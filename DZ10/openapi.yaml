@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Робот-Пылесос
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Облачный сервис
+paths:
+  /robots:
+    get:
+      summary: Метод для получения списка роботов
+      tags:
+        - Clouds
+      operationId: getAllClouds
+      responses:
+        "200":
+          description: Успешеный ответ со списком 
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Robot"
+        "default":
+          description: Всё остальное
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Создание заказа на облако
+      tags:
+        - Clouds
+      operationId: createCloud
+      requestBody:
+        content:
+          adplication/json:
+            schema:
+              $ref: "#/components/schemas/Robots"
+      responses:
+        "200":
+          description: Успешеный ответ 
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Robots"
+        "default":
+          description: Всё остальное
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users:
+    get:
+      summary: Метод для получения списка пользователей
+      tags:
+        - Users
+      operationId: getAllUser
+      responses:
+        "200":
+          description: Успешеный ответ со списком пользователей
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        "default":
+          description: Всё остальное
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Error" 
+    post:
+      summary: Создание учетной записи пользователя
+      tags:
+        - Users
+      operationId: createUser
+      requestBody:
+        content:
+          adplication/json:
+            schema:
+              $ref: "#/components/schemas/Users"
+      responses:
+        "200":
+          description: Успешеный ответ 
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        "default":
+          description: Всё остальное
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Error"                  
+  /robot/{fabricModel}:              
+    delete:
+      summary: Метод удаления робота
+      tags:
+        - Robot
+      operationId: deleteRobot
+      parameters:
+        - name: fabricModel
+          in: path
+          required: true
+          description: Индентификатор заказа
+          schema:
+            type: string
+          example: f123s125
+      responses:
+        "200":
+          description: Успешное удаление
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Robot"
+        "default":
+          description: Всё остальное
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Error"      
+  /user/{login}:              
+    delete:
+      summary: Метод удаления пользователя
+      tags:
+        - User
+      operationId: deleteUser
+      parameters:
+        - name: login
+          in: path
+          required: true
+          description: Логин пользователя
+          schema:
+            type: string
+          example: user123
+      responses:
+        "200":
+          description: Успешное удаление
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        "default":
+          description: Всё остальное
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Error"                
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - login
+        - password
+        - email
+      properties:
+        id:
+          type: integer
+          example: 1
+        login:
+          type: string
+          example: user111
+          description: Логин пользователя
+        password:
+          type: string
+          example: 1234qa56ds
+          description: Пароль 
+        email:
+          type: string
+          example: 123user321@yandex.ru
+          description: Адрес почты           
+    Robot:
+      type: object
+      required:
+        - id
+        - fabricModel
+        - model
+      properties:
+        id:
+          type: integer
+          example: 1
+        model:
+          type: string
+          example: AAA
+          description: Модель пылесоса
+        fabricmodel:
+          type: string
+          example: 1234qa56ds
+          description: Зоводской номер робота
+    Error:
+      type: object
+      required:
+        - error_code
+        - error_message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    Robots:
+      type: array
+      items:
+        $ref: "#/components/schemas/Robot"
+    Users:
+      type: array
+      items:
+        $ref: "#/components/schemas/Users"    
