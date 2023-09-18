@@ -1,207 +1,504 @@
 openapi: 3.0.0
 info:
-  title: Робот-Пылесос
+  title: Робот-пылесос
   version: 0.0.1
 servers:
   - url: http://localhost:8080/api/v1
-    description: Облачный сервис
+    description: API сервис управления роботом - пылесосм.
+
 paths:
-  /robots:
-    get:
-      summary: Метод для получения списка роботов
-      tags:
-        - Clouds
-      operationId: getAllClouds
-      responses:
-        "200":
-          description: Успешеный ответ со списком 
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Robot"
-        "default":
-          description: Всё остальное
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+
+  /User:
     post:
-      summary: Создание заказа на облако
-      tags:
-        - Clouds
-      operationId: createCloud
-      requestBody:
-        content:
-          adplication/json:
-            schema:
-              $ref: "#/components/schemas/Robots"
-      responses:
-        "200":
-          description: Успешеный ответ 
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Robots"
-        "default":
-          description: Всё остальное
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /users:
-    get:
-      summary: Метод для получения списка пользователей
-      tags:
-        - Users
-      operationId: getAllUser
-      responses:
-        "200":
-          description: Успешеный ответ со списком пользователей
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Users"
-        "default":
-          description: Всё остальное
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Error" 
-    post:
-      summary: Создание учетной записи пользователя
-      tags:
-        - Users
-      operationId: createUser
-      requestBody:
-        content:
-          adplication/json:
-            schema:
-              $ref: "#/components/schemas/Users"
-      responses:
-        "200":
-          description: Успешеный ответ 
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Users"
-        "default":
-          description: Всё остальное
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Error"                  
-  /robot/{fabricModel}:              
-    delete:
-      summary: Метод удаления робота
-      tags:
-        - Robot
-      operationId: deleteRobot
-      parameters:
-        - name: fabricModel
-          in: path
-          required: true
-          description: Индентификатор заказа
-          schema:
-            type: string
-          example: f123s125
-      responses:
-        "200":
-          description: Успешное удаление
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Robot"
-        "default":
-          description: Всё остальное
-          content:
-            adplication/json:
-              schema:
-                $ref: "#/components/schemas/Error"      
-  /user/{login}:              
-    delete:
-      summary: Метод удаления пользователя
       tags:
         - User
+      summary: Добавить пользователя
+      description: Добавить пользователя в базу
+      operationId: addUser
+      requestBody:
+        description: Создание нового пользователя в базе
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Успешеный ответ 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '405':
+          description: Недопустимый ввод
+  
+  /User/UpdateById/{userId}:
+    put:
+      tags:
+        - User
+      summary: Обновить пользвателя
+      description: Обновить пользователя в базе
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешеный ответ 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Неверный идентификатор
+        '404':
+          description: Пользователь не найден
+        '405':
+          description: Недопустимое исключение
+  /User/findById/{userId}:
+    get:
+      tags:
+        - User
+      summary: Поиск пользователя по ID
+      description: Поиск пользователя в базе
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешеный ответ 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Неверный идентификатор
+        '404':
+          description: Пользователь не найден
+          
+  /User/deleteById/{userId}:      
+    delete:
+      tags:
+        - User
+      summary: Удаление пользователя
+      description: Удаление пользователя и базы данных
       operationId: deleteUser
       parameters:
-        - name: login
-          in: path
-          required: true
-          description: Логин пользователя
+        - name: userId
+          in: header
+          description: ''
+          required: false
           schema:
             type: string
-          example: user123
+        - name: userId
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
-        "200":
-          description: Успешное удаление
+        '400':
+          description: Неверный идентификатор
+  /Robot:
+    put:
+      tags:
+        - Robot
+      summary: Обновление робота-пылесоса
+      description: Обновление данных о роботе пылесосе в базе данных
+      operationId: updateRobot
+      requestBody:
+        description: Обновление данных о роботе пылесосе в базе данных
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Robot'
+        required: true
+      responses:
+        '200':
+          description: Успешеный ответ 
           content:
-            adplication/json:
+            application/json:
               schema:
-                $ref: "#/components/schemas/Users"
-        "default":
-          description: Всё остальное
+                $ref: '#/components/schemas/Robot'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '400':
+          description: Указан неверный идентификатор
+        '404':
+          description: Робот не найден
+        '405':
+          description: Ошибка ввода
+          
+    post:
+      tags:
+        - Robot
+      summary: Добавление робота-пылесоса
+      description: Добавить робот-пылесос в базу данных
+      operationId: addRobot
+      requestBody:
+        description: Добавить робот-пылесос в базу данных
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Robot'
+        required: true
+      responses:
+        '200':
+          description: Успешеный ответ 
           content:
-            adplication/json:
+            application/json:
               schema:
-                $ref: "#/components/schemas/Error"                
+                $ref: '#/components/schemas/Robot'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '405':
+          description: Недопустимый ввод
+  
+  /Robot/robotById/{robotId}:
+    get:
+      tags:
+        - Robot
+      summary: Поиск робота-пылесоса по ID
+      description: Поиск робота-пылесоса в базе данных
+      operationId: getRobotById
+      parameters:
+        - name: robotId
+          in: path
+          description: roborID - идентификатор робота-пылесоса
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешеный ответ 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '400':
+          description: Неверный идентификатор
+        '404':
+          description: Робот не найден
+  
+  /Robot/deleteById/{robotId}:      
+    delete:
+      tags:
+        - Robot
+      summary: Удаление робота-пылесоса по ID
+      description: Удаление робота-пылесоса из базы данных
+      operationId: deleteRobot
+      parameters:
+        - name: robotId
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: robotId
+          in: path
+          description: ID - идентификатор робота-пылесоса
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Неверный идентификатор
+  
+  /Schedule:
+    put:
+      tags:
+        - Schedule
+      summary: Обновление расписания уборки
+      description: Обновление расписания в базе данных
+      operationId: updateSchedule
+      requestBody:
+        description: Обновление расписания в базе данных
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+        required: true
+      responses:
+        '200':
+          description: Успешеный ответ 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Неверный идентификатор
+        '404':
+          description: График не найден
+        '405':
+          description: Недопустимый ввод
+          
+    post:
+      tags:
+        - Schedule
+      summary: Добавление расписания
+      description: Добавление расписания в базу данных
+      operationId: addSchedule
+      requestBody:
+        description: Добавление расписания в базу данных
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+        required: true
+      responses:
+        '200':
+          description: Успешеный ответ 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '405':
+          description: Недопустимый ввод
+  /Schedule/findById/{Id}:        
+    get:
+      tags:
+        - Schedule
+      summary: Поиск расписания по ID
+      description: Поиск расписания в базе данных
+      operationId: getScheduleById
+      parameters:
+        - name: Id
+          in: path
+          description: ID - идентификатор пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешеный ответ 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Неверный идентификатор
+        '404':
+          description: График не найден
+            
+  /Schedule/deleteById/{Id}:      
+    delete:
+      tags:
+        - Schedule
+      summary: Удаление расписания по ID
+      description: Удаление расписания из базы данных
+      operationId: deleteSchedule
+      parameters:
+        - name: Id
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: Id
+          in: path
+          description: ID - идентификатор расписания
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Неверный идентификатор
 components:
   schemas:
     User:
-      type: object
       required:
         - id
+        - passHash
         - login
-        - password
-        - email
+      type: object
       properties:
         id:
           type: integer
-          example: 1
+          format: int64
+          example: 10
         login:
           type: string
-          example: user111
-          description: Логин пользователя
-        password:
-          type: string
-          example: 1234qa56ds
-          description: Пароль 
-        email:
-          type: string
-          example: 123user321@yandex.ru
-          description: Адрес почты           
-    Robot:
-      type: object
+          example: qweasdzxc@mail.ru
+        passHash:
+          type: integer
+          format: int64
+          example: asdsad34234fhfghgh
+    Schedule:
       required:
+        - dateTime
         - id
-        - fabricModel
-        - model
+        - robotId
+      type: object
       properties:
         id:
           type: integer
-          example: 1
+          format: int64
+          example: 10
+        dateTime:
+          type: string
+          example: dd.mm.yyyy-hh:mm:ss
+        robotId:
+          type: integer
+          format: int64
+          example: 10
+
+    Robot:
+      required:
+        - id
+        - model
+        - version
+        - status
+        - serialNumber
+        - ipAddress
+        - resurs
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
         model:
           type: string
-          example: AAA
-          description: Модель пылесоса
-        fabricmodel:
+          example: SP-02-8
+        version:
           type: string
-          example: 1234qa56ds
-          description: Зоводской номер робота
-    Error:
-      type: object
-      required:
-        - error_code
-        - error_message
-      properties:
-        code:
+          example: 3.0.5
+        status:
+          type: string
+          example: 
+        serialNumber:
+          type: string
+          example: ghsd148/10-jf01
+        ipAddress:
           type: integer
-        message:
+          format: int64
+          example: 192.158.1.38
+        resurs:
           type: string
-    Robots:
-      type: array
-      items:
-        $ref: "#/components/schemas/Robot"
-    Users:
-      type: array
-      items:
-        $ref: "#/components/schemas/Users"    
+          example: 
+  requestBodies:
+  
+    User:
+      description: Пользователь
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/User'
+            
+    UserArray:
+      description: Список пользователей
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+    Robot:
+      description: Робот-пылесос
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Robot'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Robot'
+            
+    RobotArray:
+      description: Список роботов-пылесосов
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Robot'
+              
+    Schedule:
+      description: Расписание уборки
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Schedule'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Schedule'
+            
+    ScheduleArray:
+      description: Список расписаний
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Schedule'
