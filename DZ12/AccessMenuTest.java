@@ -1,9 +1,10 @@
 package DZ12;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-public class AccessRepoTest {
+public class AccessMenuTest {
     @Test
     public void testGetToken() {
         Token tokenTest = new Token("asdf");
@@ -34,5 +35,14 @@ public class AccessRepoTest {
                 new Token("Архитектура ПО"));
         accessRepoUserTest.setUser(userTest);
         assertEquals(userTest, accessRepoUserTest.getUser());
+    }
+
+    @Test
+    public void testRemoveToken() {
+        Token tokenTest = new Token("asdf");
+        AccessRepo accessRepoTokenTest = new AccessRepo(new User("Иван", "qwe", "asdad343ff", "qwe@qwe.ru"), tokenTest);
+        assertEquals(accessRepoTokenTest.getToken(), tokenTest);
+        // удаление токена
+
     }
 }
